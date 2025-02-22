@@ -6,10 +6,7 @@ from dotenv import load_dotenv
 from typing import Optional, Dict, Any, List
 
 from internal.agent.agent import ToolsAgent, AgentConfig
-from internal.tools.calculator import CalculatorTool
-from internal.tools.http_request import HTTPRequestTool
-from internal.tools.wikipedia import WikipediaTool
-from internal.tools.code_execution import CodeExecutionTool
+from internal.tools.loader import ToolLoader
 
 # Load environment variables
 load_dotenv()
@@ -62,13 +59,23 @@ def create_agent():
     )
     max_iterations = int(os.getenv("MAX_ITERATIONS", "5"))
 
-    # Create tools
-    tools = [
-        CalculatorTool(),
-        HTTPRequestTool(),
-        WikipediaTool(),
-        CodeExecutionTool()
-    ]
+    # Load tools from configuration
+    try:
+        tools = ToolLoader.load_tools(ToolLoader.get_default_config_path())
+    except Exception as e:
+        print(f"Error loading tools from configuration: {str(e)}")
+        print("Falling back to default tool initialization...")
+        from internal.tools.calculator import CalculatorTool
+        from internal.tools.http_request import HTTPRequestTool
+        from internal.tools.wikipedia import WikipediaTool
+        from internal.tools.code_execution import CodeExecutionTool
+        
+        tools = [
+            CalculatorTool(),
+            HTTPRequestTool(),
+            WikipediaTool(),
+            CodeExecutionTool()
+        ]
 
     # Create agent configuration with debug and steps enabled
     config = AgentConfig(

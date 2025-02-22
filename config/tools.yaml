@@ -1,0 +1,35 @@
+tools:
+  calculator:
+    enabled: true
+    type: "internal.tools.calculator.CalculatorTool"
+    config:
+      max_iterations: 3
+      timeout: 5
+
+  http_request:
+    enabled: true
+    type: "internal.tools.http_request.HTTPRequestTool"
+    config:
+      timeout: 30
+      max_retries: 3
+      default_headers:
+        User-Agent: "Python-Tools-Agent/1.0"
+
+  wikipedia:
+    enabled: true
+    type: "internal.tools.wikipedia.WikipediaTool"
+    config:
+      language: "en"
+      max_results: 5
+      timeout: 10
+
+  code_execution:
+    enabled: true
+    type: "internal.tools.code_execution.CodeExecutionTool"
+    config:
+      timeout: 10
+      max_memory_mb: 512
+      allowed_modules:
+        - math
+        - numpy
+        - pandas 
