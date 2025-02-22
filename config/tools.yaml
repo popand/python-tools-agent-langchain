@@ -32,4 +32,16 @@ tools:
       allowed_modules:
         - math
         - numpy
-        - pandas 
+        - pandas
+        - random
+        - datetime
+        - json
+        - collections
+        - itertools
+      environment_vars:
+        PYTHONPATH: "${WORKSPACE_DIR}"
+        PYTHONIOENCODING: "utf-8"
+      security:
+        disable_subprocess: true
+        disable_file_access: true
+        disable_network_access: true 
