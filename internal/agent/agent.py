@@ -46,16 +46,19 @@ class ToolsAgent:
             verbose=True,  # Always enable verbose for capturing steps
             max_iterations=config.max_iterations,
             system_message=config.system_message,
-            return_intermediate_steps=True  # Always return steps
+            return_intermediate_steps=True,  # Always return steps
+            handle_parsing_errors=True  # Handle output parsing errors gracefully
         )
     
     async def execute(self, input_text: str, debug: bool = False) -> Dict[str, Any]:
         """Execute the agent with the given input."""
         try:
-            # Run the agent with return_intermediate_steps=True
+            # Run the agent with return_intermediate_steps=True and handle_parsing_errors=True
             agent_response = await self.agent.ainvoke(
                 {"input": input_text},
-                include_run_info=True
+                include_run_info=True,
+                handle_parsing_errors=True,
+                config={"handle_parsing_errors": True}
             )
             
             # Extract the final output and steps
@@ -119,7 +122,11 @@ class ToolsAgent:
             
         except Exception as e:
             return {
-                "error": str(e)
+                "error": str(e),
+                "details": {
+                    "type": type(e).__name__,
+                    "message": str(e)
+                } if debug else None
             }
     
     def reset_memory(self):
